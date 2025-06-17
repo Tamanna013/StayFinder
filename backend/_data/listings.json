@@ -1,0 +1,41 @@
+[
+  {
+    "title": "Cozy Apartment in City Center",
+    "description": "A beautiful and cozy apartment located in the heart of the city, perfect for tourists and business travelers.",
+    "address": "123 Main St",
+    "city": "Pune",
+    "country": "India",
+    "pricePerNight": 50,
+    "guests": 4,
+    "bedrooms": 2,
+    "bathrooms": 1,
+    "amenities": ["Wifi", "Kitchen", "AC"],
+    "images": ["/images/apt1.jpg", "/images/apt2.jpg"]
+  },
+  {
+    "title": "Spacious Villa with Garden",
+    "description": "Enjoy a peaceful stay in this spacious villa with a beautiful garden and all modern amenities.",
+    "address": "456 Oak Ave",
+    "city": "Mumbai",
+    "country": "India",
+    "pricePerNight": 120,
+    "guests": 8,
+    "bedrooms": 4,
+    "bathrooms": 3,
+    "amenities": ["Wifi", "Pool", "Parking", "BBQ"],
+    "images": ["/images/villa1.jpg", "/images/villa2.jpg"]
+  },
+  {
+    "title": "Riverside Cottage Retreat",
+    "description": "Escape to this charming cottage by the river, offering serene views and a tranquil environment.",
+    "address": "789 River Rd",
+    "city": "Goa",
+    "country": "India",
+    "pricePerNight": 80,
+    "guests": 2,
+    "bedrooms": 1,
+    "bathrooms": 1,
+    "amenities": ["Wifi", "Fireplace", "Patio"],
+    "images": ["/images/cottage1.jpg", "/images/cottage2.jpg"]
+  }
+]
