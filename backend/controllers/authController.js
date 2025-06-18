@@ -1,10 +1,6 @@
-// backend/controllers/authController.js
 const User = require('../models/User');
 const asyncHandler = require('../middleware/asyncHandler');
 
-// @desc    Register user
-// @route   POST /api/users/register
-// @access  Public
 exports.register = asyncHandler(async (req, res, next) => {
   const { name, email, password, role } = req.body;
 
@@ -19,9 +15,6 @@ exports.register = asyncHandler(async (req, res, next) => {
   sendTokenResponse(user, 200, res);
 });
 
-// @desc    Login user
-// @route   POST /api/users/login
-// @access  Public
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -53,7 +46,6 @@ const sendTokenResponse = (user, statusCode, res) => {
   const token = user.getSignedJwtToken();
 
   // For frontend testing, we'll send the token directly.
-  // In production, consider HTTP-only cookies.
   res.status(statusCode).json({
     success: true,
     token
