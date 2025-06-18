@@ -1,4 +1,3 @@
-// backend/routes/listingRoutes.js
 const express = require('express');
 const {
   getListings,
