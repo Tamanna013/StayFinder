@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/authContext';
 import { createListing, getListings, updateListing, deleteListing } from '../services/api';
 import { useNavigate } from 'react-router-dom';
-import './HostDashboard.css';
 
 function HostDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -10,17 +9,9 @@ function HostDashboard() {
 
   const [myListings, setMyListings] = useState([]);
   const [listingForm, setListingForm] = useState({
-    title: '',
-    description: '',
-    address: '',
-    city: '',
-    country: '',
-    pricePerNight: '',
-    guests: '',
-    bedrooms: '',
-    bathrooms: '',
-    amenities: '', // Comma separated string
-    images: '' // Comma separated URLs
+    title: '', description: '', address: '', city: '', country: '',
+    pricePerNight: '', guests: '', bedrooms: '', bathrooms: '',
+    amenities: '', images: ''
   });
   const [editMode, setEditMode] = useState(false);
   const [currentListingId, setCurrentListingId] = useState(null);
@@ -30,7 +21,7 @@ function HostDashboard() {
 
   useEffect(() => {
     if (!authLoading && (!user || user.role !== 'host')) {
-      navigate('/'); // Redirect if not a host or not logged in
+      navigate('/');
     } else if (user && user.role === 'host') {
       fetchMyListings();
     }
@@ -40,14 +31,12 @@ function HostDashboard() {
     setListingsLoading(true);
     setListingsError('');
     try {
-      // For a real app, you'd have an API endpoint to get listings by host ID
-      // For this prototype, we'll fetch all and filter client-side (less efficient for large data)
       const response = await getListings();
       const userListings = response.data.data.filter(listing => listing.host?._id === user.id);
       setMyListings(userListings);
     } catch (err) {
       setListingsError('Failed to fetch your listings.');
-      console.error('Error fetching host listings:', err);
+      console.error(err);
     } finally {
       setListingsLoading(false);
     }
@@ -80,11 +69,11 @@ function HostDashboard() {
         await createListing(payload);
         setFormMessage('Listing created successfully!');
       }
-      fetchMyListings(); // Refresh the list
+      fetchMyListings();
       resetForm();
     } catch (err) {
       setFormMessage(err.response?.data?.message || 'Failed to save listing.');
-      console.error('Error saving listing:', err);
+      console.error(err);
     }
   };
 
@@ -115,7 +104,7 @@ function HostDashboard() {
         fetchMyListings();
       } catch (err) {
         setFormMessage(err.response?.data?.message || 'Failed to delete listing.');
-        console.error('Error deleting listing:', err);
+        console.error(err);
       }
     }
   };
@@ -124,106 +113,78 @@ function HostDashboard() {
     setEditMode(false);
     setCurrentListingId(null);
     setListingForm({
-      title: '',
-      description: '',
-      address: '',
-      city: '',
-      country: '',
-      pricePerNight: '',
-      guests: '',
-      bedrooms: '',
-      bathrooms: '',
-      amenities: '',
-      images: ''
+      title: '', description: '', address: '', city: '', country: '',
+      pricePerNight: '', guests: '', bedrooms: '', bathrooms: '',
+      amenities: '', images: ''
     });
   };
 
-  if (authLoading) {
-    return <div className="container">Loading user data...</div>;
-  }
-
-  if (!user || user.role !== 'host') {
-    return <div className="container">You must be logged in as a host to access this page.</div>;
-  }
+  if (authLoading) return <div className="p-6 text-center">Loading user data...</div>;
+  if (!user || user.role !== 'host') return <div className="p-6 text-center">You must be logged in as a host to access this page.</div>;
 
   return (
-    <div className="container host-dashboard">
-      <h1>Host Dashboard</h1>
+    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow mt-8">
+      <h1 className="text-3xl font-semibold text-center text-gray-800 mb-8">Host Dashboard</h1>
 
-      <div className="listing-form-section">
-        <h2>{editMode ? 'Edit Listing' : 'Add New Listing'}</h2>
-        {formMessage && <p className="form-message">{formMessage}</p>}
-        <form onSubmit={handleAddOrUpdateListing}>
-          <div className="form-group">
-            <label>Title:</label>
-            <input type="text" name="title" value={listingForm.title} onChange={handleFormChange} required />
+      <div className="mb-10 p-6 border border-gray-200 bg-gray-50 rounded-lg">
+        <h2 className="text-xl text-blue-600 font-semibold text-center mb-6">{editMode ? 'Edit Listing' : 'Add New Listing'}</h2>
+        {formMessage && <p className="text-center text-green-600 font-semibold mb-4">{formMessage}</p>}
+
+        <form onSubmit={handleAddOrUpdateListing} className="space-y-4">
+          {[
+            { label: 'Title', name: 'title' },
+            { label: 'Description', name: 'description', type: 'textarea' },
+            { label: 'Address', name: 'address' },
+            { label: 'City', name: 'city' },
+            { label: 'Country', name: 'country' },
+            { label: 'Price Per Night', name: 'pricePerNight', type: 'number' },
+            { label: 'Max Guests', name: 'guests', type: 'number' },
+            { label: 'Bedrooms', name: 'bedrooms', type: 'number' },
+            { label: 'Bathrooms', name: 'bathrooms', type: 'number' },
+            { label: 'Amenities (comma separated)', name: 'amenities' },
+            { label: 'Image URLs (comma separated)', name: 'images' }
+          ].map(({ label, name, type = 'text' }) => (
+            <div key={name}>
+              <label className="block font-semibold text-gray-700 mb-1">{label}:</label>
+              {type === 'textarea' ? (
+                <textarea name={name} value={listingForm[name]} onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded-md resize-vertical min-h-[80px]" required />
+              ) : (
+                <input type={type} name={name} value={listingForm[name]} onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded-md" required />
+              )}
+            </div>
+          ))}
+
+          <div className="flex items-center space-x-4 pt-2">
+            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition">{editMode ? 'Update Listing' : 'Add Listing'}</button>
+            {editMode && <button type="button" onClick={resetForm} className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-md">Cancel Edit</button>}
           </div>
-          <div className="form-group">
-            <label>Description:</label>
-            <textarea name="description" value={listingForm.description} onChange={handleFormChange} required></textarea>
-          </div>
-          <div className="form-group">
-            <label>Address:</label>
-            <input type="text" name="address" value={listingForm.address} onChange={handleFormChange} required />
-          </div>
-          <div className="form-group">
-            <label>City:</label>
-            <input type="text" name="city" value={listingForm.city} onChange={handleFormChange} required />
-          </div>
-          <div className="form-group">
-            <label>Country:</label>
-            <input type="text" name="country" value={listingForm.country} onChange={handleFormChange} required />
-          </div>
-          <div className="form-group">
-            <label>Price Per Night:</label>
-            <input type="number" name="pricePerNight" value={listingForm.pricePerNight} onChange={handleFormChange} min="0" required />
-          </div>
-          <div className="form-group">
-            <label>Max Guests:</label>
-            <input type="number" name="guests" value={listingForm.guests} onChange={handleFormChange} min="1" required />
-          </div>
-          <div className="form-group">
-            <label>Bedrooms:</label>
-            <input type="number" name="bedrooms" value={listingForm.bedrooms} onChange={handleFormChange} min="0" />
-          </div>
-          <div className="form-group">
-            <label>Bathrooms:</label>
-            <input type="number" name="bathrooms" value={listingForm.bathrooms} onChange={handleFormChange} min="0" />
-          </div>
-          <div className="form-group">
-            <label>Amenities (comma separated):</label>
-            <input type="text" name="amenities" value={listingForm.amenities} onChange={handleFormChange} placeholder="Wifi, Kitchen, Pool" />
-          </div>
-          <div className="form-group">
-            <label>Image URLs (comma separated):</label>
-            <input type="text" name="images" value={listingForm.images} onChange={handleFormChange} placeholder="http://example.com/img1.jpg, http://example.com/img2.jpg" />
-          </div>
-          <button type="submit" className="host-button">{editMode ? 'Update Listing' : 'Add Listing'}</button>
-          {editMode && <button type="button" onClick={resetForm} className="host-button reset-button">Cancel Edit</button>}
         </form>
       </div>
 
-      <div className="my-listings-section">
-        <h2>My Listings</h2>
+      <div className="mb-8">
+        <h2 className="text-xl text-blue-600 font-semibold text-center mb-6">My Listings</h2>
         {listingsLoading ? (
-          <p>Loading your listings...</p>
+          <p className="text-center">Loading your listings...</p>
         ) : listingsError ? (
-          <p className="error-message">{listingsError}</p>
+          <p className="text-center text-red-600">{listingsError}</p>
         ) : myListings.length === 0 ? (
-          <p>You haven't added any listings yet. Use the form above to add one!</p>
+          <p className="text-center text-gray-600">You haven't added any listings yet. Use the form above to add one!</p>
         ) : (
-          <div className="listings-list">
+          <div className="grid gap-4">
             {myListings.map(listing => (
-              <div key={listing._id} className="listing-item">
-                <img src={listing.images[0] || 'https://via.placeholder.com/100'} alt={listing.title} />
-                <div className="listing-item-info">
-                  <h3>{listing.title}</h3>
-                  <p>{listing.city}, {listing.country}</p>
-                  <p>${listing.pricePerNight} / night</p>
+              <div key={listing._id} className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <img src={listing.images[0] || 'https://via.placeholder.com/100'} alt={listing.title}
+                  className="w-24 h-20 object-cover rounded-md" />
+                <div className="flex-grow">
+                  <h3 className="text-lg font-semibold text-gray-800">{listing.title}</h3>
+                  <p className="text-sm text-gray-600">{listing.city}, {listing.country}</p>
+                  <p className="text-sm text-gray-800 font-medium">${listing.pricePerNight} / night</p>
                 </div>
-                <div className="listing-item-actions">
-                  <button onClick={() => handleEditClick(listing)} className="edit-button">Edit</button>
-                  <button onClick={() => handleDeleteClick(listing._id)} className="delete-button">Delete</button>
+                <div className="flex space-x-2 mt-2 sm:mt-0">
+                  <button onClick={() => handleEditClick(listing)} className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-3 py-1 rounded-md">Edit</button>
+                  <button onClick={() => handleDeleteClick(listing._id)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md">Delete</button>
                 </div>
               </div>
             ))}

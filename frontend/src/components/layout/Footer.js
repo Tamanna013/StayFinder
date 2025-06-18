@@ -1,10 +1,9 @@
 import React from 'react';
-import './Footer.css'; // Create this CSS file
 
 function Footer() {
   return (
-    <footer className="footer">
-      <div className="container">
+    <footer className="bg-gray-800 text-white text-center py-4 w-full">
+      <div className="max-w-screen-xl mx-auto px-4">
         <p>&copy; {new Date().getFullYear()} StayFinder. All rights reserved.</p>
       </div>
     </footer>
