@@ -1,4 +1,3 @@
-// src/context/AuthContext.js
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { loginUser, registerUser } from '../services/api';
 
@@ -10,11 +9,8 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, you might want to verify the token with the backend
-    // to ensure it's still valid and get user details.
     if (token) {
       // For now, we'll assume the token is valid and just set a dummy user
-      // You'd typically decode the JWT or make a call to /api/users/me
       try {
         const decodedToken = JSON.parse(atob(token.split('.')[1])); // Basic JWT decode
         setUser({ id: decodedToken.id, role: decodedToken.role });
