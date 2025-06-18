@@ -1,4 +1,3 @@
-// backend/seeder.js
 const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -11,7 +10,7 @@ const User = require('./models/User');
 const Listing = require('./models/Listing');
 const Booking = require('./models/Booking');
 
-// Connect to DB (ensure this connection is successful as per previous steps)
+// Connect to DB
 mongoose.connect(process.env.MONGO_URI);
 
 // Read JSON files
@@ -33,8 +32,6 @@ const importData = async () => {
     // 2. Create Users first
     const createdUsers = await User.create(usersData);
 
-    // Find a host user's ID
-    // We assume there's at least one user with role 'host' in your users.json
     const hostUser = createdUsers.find(user => user.role === 'host');
     if (!hostUser) {
       console.error('No host user found in seed data! Please ensure at least one user has role: "host".');
