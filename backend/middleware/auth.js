@@ -1,6 +1,5 @@
-// backend/middleware/auth.js
 const jwt = require('jsonwebtoken');
-const asyncHandler = require('./asyncHandler'); // We'll create this next
+const asyncHandler = require('./asyncHandler');
 const User = require('../models/User');
 
 // Protect routes
@@ -11,10 +10,6 @@ exports.protect = asyncHandler(async (req, res, next) => {
     // Set token from Bearer token in header
     token = req.headers.authorization.split(' ')[1];
   }
-  // You could also get token from cookie if you prefer storing it there
-  // else if (req.cookies.token) {
-  //   token = req.cookies.token;
-  // }
 
   // Make sure token exists
   if (!token) {
