@@ -1,12 +1,8 @@
-// backend/controllers/bookingController.js
 const Booking = require('../models/Booking');
 const Listing = require('../models/Listing');
 const asyncHandler = require('../middleware/asyncHandler');
 const { protect, authorize } = require('../middleware/auth');
 
-// @desc    Get all bookings (for admin or user's own bookings)
-// @route   GET /api/bookings
-// @access  Private
 exports.getBookings = asyncHandler(async (req, res, next) => {
   let query;
 
@@ -36,9 +32,6 @@ exports.getBookings = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Get single booking
-// @route   GET /api/bookings/:id
-// @access  Private
 exports.getBooking = asyncHandler(async (req, res, next) => {
   const booking = await Booking.findById(req.params.id).populate({
     path: 'listing',
@@ -60,9 +53,6 @@ exports.getBooking = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: booking });
 });
 
-// @desc    Create new booking
-// @route   POST /api/bookings
-// @access  Private (User only)
 exports.createBooking = asyncHandler(async (req, res, next) => {
   req.body.user = req.user.id; // Assign the logged-in user as the booker
 
@@ -82,7 +72,7 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ success: false, message: `Number of guests exceeds listing's maximum capacity of ${foundListing.guests}` });
   }
 
-  // Calculate total price (basic calculation for now)
+  // Calculate total price 
   const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
   const diffDays = Math.round(Math.abs((new Date(checkOutDate) - new Date(checkInDate)) / oneDay));
   if (diffDays === 0) {
@@ -96,9 +86,6 @@ exports.createBooking = asyncHandler(async (req, res, next) => {
   res.status(201).json({ success: true, data: booking });
 });
 
-// @desc    Update booking
-// @route   PUT /api/bookings/:id
-// @access  Private (User only, own booking)
 exports.updateBooking = asyncHandler(async (req, res, next) => {
   let booking = await Booking.findById(req.params.id);
 
@@ -118,10 +105,6 @@ exports.updateBooking = asyncHandler(async (req, res, next) => {
 
   res.status(200).json({ success: true, data: booking });
 });
-
-// @desc    Delete booking
-// @route   DELETE /api/bookings/:id
-// @access  Private (User only, own booking)
 exports.deleteBooking = asyncHandler(async (req, res, next) => {
   const booking = await Booking.findById(req.params.id);
 
