@@ -7,7 +7,7 @@ import ListingDetailsPage from './pages/ListingDetailsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HostDashboard from './pages/HostDashboard';
-import './App.css'; // Add some basic styling if needed
+import './App.css';
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/host-dashboard" element={<HostDashboard />} />
-            {/* Add more routes as needed */}
+            
           </Routes>
         </main>
         <Footer />
