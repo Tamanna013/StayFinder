@@ -1,16 +1,10 @@
-// backend/controllers/listingController.js
 const Listing = require('../models/Listing');
 const asyncHandler = require('../middleware/asyncHandler');
 const { protect, authorize } = require('../middleware/auth');
 
-// @desc    Get all listings
-// @route   GET /api/listings
-// @access  Public
 exports.getListings = asyncHandler(async (req, res, next) => {
-  // Basic filtering for now, can add more complex search later
   let query;
 
-  // Copy req.query
   const reqQuery = { ...req.query };
 
   // Fields to exclude
@@ -78,9 +72,6 @@ exports.getListings = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Get single listing
-// @route   GET /api/listings/:id
-// @access  Public
 exports.getListing = asyncHandler(async (req, res, next) => {
   const listing = await Listing.findById(req.params.id).populate('host', 'name email');
 
@@ -91,9 +82,6 @@ exports.getListing = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: listing });
 });
 
-// @desc    Create new listing
-// @route   POST /api/listings
-// @access  Private (Host only)
 exports.createListing = asyncHandler(async (req, res, next) => {
   req.body.host = req.user.id; // Assign the logged-in user as the host
 
@@ -101,10 +89,6 @@ exports.createListing = asyncHandler(async (req, res, next) => {
 
   res.status(201).json({ success: true, data: listing });
 });
-
-// @desc    Update listing
-// @route   PUT /api/listings/:id
-// @access  Private (Host only, own listing)
 exports.updateListing = asyncHandler(async (req, res, next) => {
   let listing = await Listing.findById(req.params.id);
 
@@ -125,9 +109,6 @@ exports.updateListing = asyncHandler(async (req, res, next) => {
   res.status(200).json({ success: true, data: listing });
 });
 
-// @desc    Delete listing
-// @route   DELETE /api/listings/:id
-// @access  Private (Host only, own listing)
 exports.deleteListing = asyncHandler(async (req, res, next) => {
   const listing = await Listing.findById(req.params.id);
 
@@ -140,7 +121,7 @@ exports.deleteListing = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ success: false, message: `User ${req.user.id} is not authorized to delete this listing` });
   }
 
-  await listing.deleteOne(); // Use deleteOne() instead of remove()
+  await listing.deleteOne(); 
 
   res.status(200).json({ success: true, data: {} });
 });
