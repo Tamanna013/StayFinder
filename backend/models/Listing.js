@@ -1,4 +1,3 @@
-// backend/models/Listing.js
 const mongoose = require('mongoose');
 
 const ListingSchema = new mongoose.Schema({
@@ -45,8 +44,8 @@ const ListingSchema = new mongoose.Schema({
     min: [0, 'Bathrooms cannot be negative'],
     default: 1
   },
-  amenities: [String], // Array of strings, e.g., ['wifi', 'kitchen']
-  images: [String], // Array of image URLs
+  amenities: [String], 
+  images: [String], 
   host: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
